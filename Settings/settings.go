@@ -73,6 +73,14 @@ func DebugMode(mode bool) {
 	config.Debug = mode
 }
 
-func getDebugMode() bool {
+func GetDebugMode() bool {
 	return config.Debug
+}
+
+func ConfigPath(path string) {
+	config.ConfigPath = path
+}
+
+func GetConfigPath() string {
+	return config.ConfigPath
 }

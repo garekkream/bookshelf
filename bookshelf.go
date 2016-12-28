@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/garekkream/BookShelf/Settings"
+	_ "github.com/garekkream/BookShelf/Shelf"
 	parser "gopkg.in/alecthomas/kingpin.v2"
 )
 

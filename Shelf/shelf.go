@@ -3,6 +3,7 @@ package Shelf
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/garekkream/BookShelf/Settings"
 )
@@ -18,7 +19,6 @@ const (
 )
 
 var defaultPath = Settings.GetConfigPath()[:strings.LastIndex(Settings.GetConfigPath(), "/")]
-var shelfList = []Shelf{}
 
 func debugPrintln(text string) {
 	if Settings.GetDebugMode() == true {
@@ -31,13 +31,21 @@ func NewShelf(name string, path string) {
 
 	if len(name) < 1 {
 		debugPrintln("Missing new Shelf name!")
+		s.Name("Bookshelf")
+	} else {
+		s.Name(name)
 	}
 
 	if len(path) > 0 {
 		s.ShelfPath = path
 	} else {
-		fileName := time.
+		t := time.Now()
+		file := fmt.Sprintf("%d_%d_%d_bookshelf.shelf", t.Year(), t.Month(), t.Day())
+
+		s.ShelfPath = defaultPath + "/" + file
 	}
+
+	debugPrintln("New shelf: " + s.ShelfName + " in " + s.ShelfPath)
 }
 
 func (shelf *Shelf) Name(name string) {

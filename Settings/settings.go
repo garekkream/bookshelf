@@ -64,13 +64,22 @@ func readConfig() {
 	file, err := ioutil.ReadFile(config.ConfigPath)
 	if err != nil {
 		fmt.Println(debugMarker + "Failed to open config file!")
+		return
 	}
 
 	json.Unmarshal(file, config)
 }
 
+func debugPrintln(text string) {
+	if GetDebugMode() {
+		fmt.Println(debugMarker + text)
+	}
+}
+
 func DebugMode(mode bool) {
 	config.Debug = mode
+
+	debugPrintln("Debug mode enabled!")
 }
 
 func GetDebugMode() bool {
@@ -79,6 +88,8 @@ func GetDebugMode() bool {
 
 func ConfigPath(path string) {
 	config.ConfigPath = path
+
+	debugPrintln("ConfigPath set to: " + config.ConfigPath)
 }
 
 func GetConfigPath() string {

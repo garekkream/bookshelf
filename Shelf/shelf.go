@@ -21,7 +21,7 @@ const (
 var defaultPath = Settings.GetConfigPath()[:strings.LastIndex(Settings.GetConfigPath(), "/")]
 
 func debugPrintln(text string) {
-	if Settings.GetDebugMode() == true {
+	if Settings.GetDebugMode() {
 		fmt.Println(debugMarker + text)
 	}
 }

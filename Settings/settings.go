@@ -46,6 +46,12 @@ func init() {
 	}
 }
 
+func writeConfig() {
+	b, _ := json.Marshal(*config)
+
+	ioutil.WriteFile(config.ConfigPath, b, os.ModeAppend)
+}
+
 func createConfig() {
 	index := strings.LastIndex(config.ConfigPath, "/")
 
@@ -55,9 +61,7 @@ func createConfig() {
 	config.DBEngine = litesql
 	config.Debug = false
 
-	b, _ := json.Marshal(*config)
-
-	ioutil.WriteFile(config.ConfigPath, b, os.ModeAppend)
+	writeConfig()
 }
 
 func readConfig() {
@@ -77,9 +81,22 @@ func debugPrintln(text string) {
 }
 
 func DebugMode(mode bool) {
-	config.Debug = mode
+	switch mode {
+	case true:
+		debugPrintln("Debug mode enabled!")
+		break
+	case false:
+		debugPrintln("Debug mode disabled!")
+		break
+	}
 
-	debugPrintln("Debug mode enabled!")
+	config.Debug = mode
+}
+
+func DebugModeSave(mode bool) {
+	DebugMode(mode)
+
+	//Save
 }
 
 func GetDebugMode() bool {
@@ -94,4 +111,10 @@ func ConfigPath(path string) {
 
 func GetConfigPath() string {
 	return config.ConfigPath
+}
+
+func PrintConfig() {
+	fmt.Println("Bookshelf Settings:")
+	fmt.Printf("\tConfig path: \t%s\n", config.ConfigPath)
+	fmt.Printf("\tDebug mode: \t%t\n", config.Debug)
 }

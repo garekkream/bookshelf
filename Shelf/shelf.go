@@ -29,14 +29,14 @@ func debugPrintln(text string) {
 func NewShelf(name string, path string) {
 	s := new(Shelf)
 
-	if len(name) < 1 {
+	if len(name) != 0 {
+		s.Name(name)
+	} else {
 		debugPrintln("Missing new Shelf name!")
 		s.Name("Bookshelf")
-	} else {
-		s.Name(name)
 	}
 
-	if len(path) > 0 {
+	if len(path) != 0 {
 		s.ShelfPath = path
 	} else {
 		t := time.Now()
@@ -44,6 +44,8 @@ func NewShelf(name string, path string) {
 
 		s.ShelfPath = defaultPath + "/" + file
 	}
+
+	s.AddShelfToConfig()
 
 	debugPrintln("New shelf: " + s.ShelfName + " in " + s.ShelfPath)
 }
@@ -57,6 +59,13 @@ func (shelf *Shelf) GetName() string {
 	return shelf.ShelfName
 }
 
-func (Shelf *Shelf) GetPath() string {
-	return Shelf.ShelfPath
+func (shelf *Shelf) GetPath() string {
+	return shelf.ShelfPath
+}
+
+func (shelf *Shelf) AddShelfToConfig() {
+	conf := Settings.GetConfig()
+	conf.Shelfs = append(conf.Shelfs, Settings.ShelfList{shelf.GetName(), shelf.GetPath()})
+
+	Settings.WriteConfig()
 }

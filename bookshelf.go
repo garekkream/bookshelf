@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/garekkream/BookShelf/Settings"
-	_ "github.com/garekkream/BookShelf/Shelf"
+	"github.com/garekkream/BookShelf/Shelf"
 	parser "gopkg.in/alecthomas/kingpin.v2"
 )
 
@@ -17,6 +17,11 @@ var (
 	settings      = parser.Command("settings", "Settings manipulation command")
 	settingsPrint = settings.Flag("print-config", "Print current settings").Short('p').Bool()
 	settingsDebug = settings.Flag("set-debug", "Enable/Disable debug mode [y/n]").Short('d').String()
+
+	shelf     = parser.Command("shelf", "Shelf manipulation command")
+	shelfNew  = shelf.Command("new", "Creates new shelf")
+	shelfName = shelf.Flag("name", "New shelf name").String()
+	shelfPath = shelf.Flag("path", "Storage path for new shelf").String()
 )
 
 const (
@@ -58,6 +63,20 @@ func main() {
 			Settings.DebugModeSave(mode)
 		}
 
+	case "shelf new":
+		var n string
+		var p string
+
+		if len(*shelfName) != 0 {
+			n = *shelfName
+		}
+
+		if len(*shelfPath) != 0 {
+			p = *shelfPath
+		}
+
+		Shelf.NewShelf(n, p)
+		break
 	}
 
 	debugPrintln("Initialization completed!")

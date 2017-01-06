@@ -11,14 +11,20 @@ import (
 
 const (
 	clitext = iota
-	litesql = iota
-	mongodb = iota
+	litesql
+	mongodb
 )
 
+type ShelfList struct {
+	Name string `json:"shelfName"`
+	Path string `json:"shelfPath"`
+}
+
 type Config struct {
-	ConfigPath string `json:"configPath"`
-	Debug      bool   `json:"debug"`
-	DBEngine   int    `json:"db_engine"`
+	ConfigPath string      `json:"configPath"`
+	Debug      bool        `json:"debug"`
+	DBEngine   int         `json:"db_engine"`
+	Shelfs     []ShelfList `json:"shelfs"`
 }
 
 var config *Config
@@ -46,7 +52,7 @@ func init() {
 	}
 }
 
-func writeConfig() {
+func WriteConfig() {
 	b, _ := json.Marshal(*config)
 
 	ioutil.WriteFile(config.ConfigPath, b, os.ModeAppend)
@@ -61,7 +67,7 @@ func createConfig() {
 	config.DBEngine = litesql
 	config.Debug = false
 
-	writeConfig()
+	WriteConfig()
 }
 
 func readConfig() {
@@ -96,7 +102,7 @@ func DebugMode(mode bool) {
 func DebugModeSave(mode bool) {
 	DebugMode(mode)
 
-	//Save
+	WriteConfig()
 }
 
 func GetDebugMode() bool {
@@ -117,4 +123,8 @@ func PrintConfig() {
 	fmt.Println("Bookshelf Settings:")
 	fmt.Printf("\tConfig path: \t%s\n", config.ConfigPath)
 	fmt.Printf("\tDebug mode: \t%t\n", config.Debug)
+}
+
+func GetConfig() *Config {
+	return config
 }

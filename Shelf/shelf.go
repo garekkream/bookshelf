@@ -1,8 +1,11 @@
 package Shelf
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -38,17 +41,28 @@ func NewShelf(name string, path string) {
 	}
 
 	if len(path) != 0 {
-		s.ShelfPath = path
+		if filepath.IsAbs(path) {
+			s.ShelfPath = path
+		} else {
+			p, _ := filepath.Abs(path)
+			s.ShelfPath = p
+		}
 	} else {
 		t := time.Now()
 		file := fmt.Sprintf("%d_%d_%d_bookshelf.shelf", t.Year(), t.Month(), t.Day())
 
 		s.ShelfPath = defaultPath + "/" + file
 	}
-
+	s.saveShelf()
 	s.addShelfToConfig()
 
 	debugPrintln("New shelf: " + s.ShelfName + " in " + s.ShelfPath)
+}
+
+func (shelf *Shelf) saveShelf() {
+	b, _ := json.Marshal(shelf)
+
+	ioutil.WriteFile(shelf.GetPath(), b, os.ModeAppend)
 }
 
 func DelShelf(name string) {
@@ -58,7 +72,7 @@ func DelShelf(name string) {
 		if n.Name == name {
 			_, err := os.Stat(n.Path)
 			if err != nil {
-				fmt.Printf("Failed to remove Shelf! File %s doesn't exists!", n.Path)
+				fmt.Printf("Failed to remove Shelf! File %s doesn't exists!\n", n.Path)
 			} else {
 				os.Remove(n.Path)
 

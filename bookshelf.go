@@ -20,6 +20,8 @@ var (
 
 	shelf     = parser.Command("shelf", "Shelf manipulation command")
 	shelfNew  = shelf.Command("new", "Creates new shelf")
+	shelfList = shelf.Command("list", "List available shelfs")
+	shelfDel  = shelf.Command("del", "Delete existing shelf")
 	shelfName = shelf.Flag("name", "New shelf name").String()
 	shelfPath = shelf.Flag("path", "Storage path for new shelf").String()
 )
@@ -76,6 +78,20 @@ func main() {
 		}
 
 		Shelf.NewShelf(n, p)
+		break
+
+	case "shelf del":
+		if len(*shelfName) != 0 {
+			Shelf.DelShelf(*shelfName)
+		} else {
+			fmt.Println("Failed to remove Shelf. Missing Shelf name!")
+		}
+		break
+
+	case "shelf list":
+		for _, n := range Settings.GetConfig().Shelfs {
+			fmt.Printf("%s %s\n", n.Name, n.Path)
+		}
 		break
 	}
 

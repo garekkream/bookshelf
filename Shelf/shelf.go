@@ -2,6 +2,7 @@ package Shelf
 
 import (
 	"fmt"
+	"os"
 	"strings"
 	"time"
 
@@ -45,9 +46,31 @@ func NewShelf(name string, path string) {
 		s.ShelfPath = defaultPath + "/" + file
 	}
 
-	s.AddShelfToConfig()
+	s.addShelfToConfig()
 
 	debugPrintln("New shelf: " + s.ShelfName + " in " + s.ShelfPath)
+}
+
+func DelShelf(name string) {
+	conf := Settings.GetConfig()
+
+	for i, n := range conf.Shelfs {
+		if n.Name == name {
+			_, err := os.Stat(n.Path)
+			if err != nil {
+				fmt.Printf("Failed to remove Shelf! File %s doesn't exists!", n.Path)
+			} else {
+				os.Remove(n.Path)
+
+				conf.Shelfs[i] = conf.Shelfs[len(conf.Shelfs)-1]
+				conf.Shelfs = conf.Shelfs[:len(conf.Shelfs)-1]
+
+				debugPrintln("Removed Shelf: " + name)
+			}
+		} else {
+			debugPrintln("Failed to find shelf: " + name)
+		}
+	}
 }
 
 func (shelf *Shelf) Name(name string) {
@@ -63,7 +86,7 @@ func (shelf *Shelf) GetPath() string {
 	return shelf.ShelfPath
 }
 
-func (shelf *Shelf) AddShelfToConfig() {
+func (shelf *Shelf) addShelfToConfig() {
 	conf := Settings.GetConfig()
 	conf.Shelfs = append(conf.Shelfs, Settings.ShelfList{shelf.GetName(), shelf.GetPath()})
 

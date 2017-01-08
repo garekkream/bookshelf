@@ -75,12 +75,15 @@ func DelShelf(name string) {
 				fmt.Printf("Failed to remove Shelf! File %s doesn't exists!\n", n.Path)
 			} else {
 				os.Remove(n.Path)
-
-				conf.Shelfs[i] = conf.Shelfs[len(conf.Shelfs)-1]
-				conf.Shelfs = conf.Shelfs[:len(conf.Shelfs)-1]
-
-				debugPrintln("Removed Shelf: " + name)
 			}
+
+			conf.Shelfs[i] = conf.Shelfs[len(conf.Shelfs)-1]
+			conf.Shelfs = conf.Shelfs[:len(conf.Shelfs)-1]
+
+			debugPrintln("Removed Shelf: " + name)
+			Settings.WriteConfig()
+
+			return
 		} else {
 			debugPrintln("Failed to find shelf: " + name)
 		}

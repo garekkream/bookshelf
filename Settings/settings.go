@@ -16,8 +16,9 @@ const (
 )
 
 type ShelfList struct {
-	Name string `json:"shelfName"`
-	Path string `json:"shelfPath"`
+	Name   string `json:"shelfName"`
+	Path   string `json:"shelfPath"`
+	Active bool   `json:"shelfActive"`
 }
 
 type Config struct {
@@ -123,8 +124,24 @@ func PrintConfig() {
 	fmt.Println("Bookshelf Settings:")
 	fmt.Printf("\tConfig path: \t%s\n", config.ConfigPath)
 	fmt.Printf("\tDebug mode: \t%t\n", config.Debug)
+	if len(config.Shelfs) != 0 {
+		fmt.Printf("\tShelfs:\n")
+		for _, shelf := range config.Shelfs {
+			fmt.Printf("\t\t%s \t (%s) \t [Active = %t]\n", shelf.Name, shelf.Path, shelf.Active)
+		}
+	} else {
+		fmt.Printf("\t\tNo shelfs available!\n")
+	}
 }
 
 func GetConfig() *Config {
 	return config
+}
+
+func ActivateShelf(index int) {
+	for i, _ := range config.Shelfs {
+		config.Shelfs[i].Active = false
+	}
+
+	config.Shelfs[index].Active = true
 }

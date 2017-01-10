@@ -53,6 +53,9 @@ func NewShelf(name string, path string) {
 
 		s.ShelfPath = defaultPath + "/" + file
 	}
+
+	os.Create(s.ShelfPath)
+
 	s.saveShelf()
 	s.addShelfToConfig()
 
@@ -70,6 +73,12 @@ func DelShelf(name string) {
 
 	for i, n := range conf.Shelfs {
 		if n.Name == name {
+
+			// If removing currently active shelf, activate first one
+			if n.Active && len(conf.Shelfs) > 0 {
+				conf.Shelfs[0].Active = true
+			}
+
 			_, err := os.Stat(n.Path)
 			if err != nil {
 				fmt.Printf("Failed to remove Shelf! File %s doesn't exists!\n", n.Path)
@@ -105,7 +114,13 @@ func (shelf *Shelf) GetPath() string {
 
 func (shelf *Shelf) addShelfToConfig() {
 	conf := Settings.GetConfig()
-	conf.Shelfs = append(conf.Shelfs, Settings.ShelfList{shelf.GetName(), shelf.GetPath()})
+
+	//When new shelf is available make it active by default
+	for i, _ := range conf.Shelfs {
+		conf.Shelfs[i].Active = false
+	}
+
+	conf.Shelfs = append(conf.Shelfs, Settings.ShelfList{shelf.GetName(), shelf.GetPath(), true})
 
 	Settings.WriteConfig()
 }

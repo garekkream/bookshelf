@@ -18,12 +18,14 @@ var (
 	settingsPrint = settings.Flag("print-config", "Print current settings").Short('p').Bool()
 	settingsDebug = settings.Flag("set-debug", "Enable/Disable debug mode [y/n]").Short('d').String()
 
-	shelf     = parser.Command("shelf", "Shelf manipulation command")
-	shelfNew  = shelf.Command("new", "Creates new shelf")
-	shelfList = shelf.Command("list", "List available shelfs")
-	shelfDel  = shelf.Command("del", "Delete existing shelf")
-	shelfName = shelf.Flag("name", "New shelf name").String()
-	shelfPath = shelf.Flag("path", "Storage path for new shelf").String()
+	shelf       = parser.Command("shelf", "Shelf manipulation command")
+	shelfNew    = shelf.Command("new", "Creates new shelf")
+	shelfList   = shelf.Command("list", "List available shelfs")
+	shelfDel    = shelf.Command("del", "Delete existing shelf")
+	shelfActive = shelf.Command("active", "Activate selected shelf")
+	shelfName   = shelf.Flag("name", "New shelf name").String()
+	shelfPath   = shelf.Flag("path", "Storage path for new shelf").String()
+	shelfIndex  = shelf.Flag("index", "Access shelfs using index").Int()
 )
 
 const (
@@ -34,6 +36,10 @@ func debugPrintln(text string) {
 	if Settings.GetDebugMode() {
 		fmt.Println(debugMarker + text)
 	}
+}
+
+func init() {
+	*shelfIndex = -1
 }
 
 func main() {
@@ -89,10 +95,44 @@ func main() {
 		break
 
 	case "shelf list":
-		for _, n := range Settings.GetConfig().Shelfs {
-			fmt.Printf("%s %s\n", n.Name, n.Path)
+		shelfs := Settings.GetConfig().Shelfs
+
+		if len(shelfs) > 0 {
+			for _, n := range Settings.GetConfig().Shelfs {
+				fmt.Printf("%s %s\n", n.Name, n.Path)
+			}
+		} else {
+			fmt.Println("No Shelfs available!")
 		}
 		break
+
+	case "shelf active":
+		if len(*shelfName) != 0 {
+			shelfs := Settings.GetConfig().Shelfs
+
+			for i, n := range shelfs {
+				if n.Name == *shelfName {
+					Settings.ActivateShelf(i)
+
+					Settings.WriteConfig()
+					break
+				}
+			}
+			break
+		}
+
+		if *shelfIndex != -1 {
+			shelfs := Settings.GetConfig().Shelfs
+
+			if *shelfIndex < len(shelfs) &&
+				*shelfIndex >= 0 {
+
+				Settings.ActivateShelf(*shelfIndex)
+			}
+
+			Settings.WriteConfig()
+			break
+		}
 	}
 
 	debugPrintln("Initialization completed!")

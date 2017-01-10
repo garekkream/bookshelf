@@ -5,6 +5,7 @@ import (
 
 	"github.com/garekkream/BookShelf/Settings"
 	"github.com/garekkream/BookShelf/Shelf"
+
 	parser "gopkg.in/alecthomas/kingpin.v2"
 )
 

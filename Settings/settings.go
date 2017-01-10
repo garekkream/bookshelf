@@ -9,12 +9,6 @@ import (
 	"strings"
 )
 
-const (
-	clitext = iota
-	litesql
-	mongodb
-)
-
 type ShelfList struct {
 	Name   string `json:"shelfName"`
 	Path   string `json:"shelfPath"`
@@ -24,7 +18,6 @@ type ShelfList struct {
 type Config struct {
 	ConfigPath string      `json:"configPath"`
 	Debug      bool        `json:"debug"`
-	DBEngine   int         `json:"db_engine"`
 	Shelfs     []ShelfList `json:"shelfs"`
 }
 
@@ -65,7 +58,6 @@ func createConfig() {
 	os.Mkdir(config.ConfigPath[:index], os.ModePerm)
 	os.Create(config.ConfigPath)
 
-	config.DBEngine = litesql
 	config.Debug = false
 
 	WriteConfig()

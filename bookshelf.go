@@ -29,16 +29,6 @@ var (
 	shelfIndex  = shelf.Flag("index", "Access shelfs using index").Int()
 )
 
-const (
-	debugMarker = string("BookShelf::Main")
-)
-
-func debugPrintln(text string) {
-	if Settings.GetDebugMode() {
-		fmt.Println(debugMarker + text)
-	}
-}
-
 func init() {
 	*shelfIndex = -1
 }
@@ -46,7 +36,7 @@ func init() {
 func main() {
 	var mode bool
 
-	debugPrintln("Application started!")
+	Settings.Log().Infoln("Application started!")
 
 	parser.Version(date + ver)
 
@@ -65,7 +55,7 @@ func main() {
 				mode = false
 				break
 			default:
-				fmt.Println("Unknown debug status! Setting debug mode to false!")
+				Settings.Log().Warningln("Unknown debug status! Setting debug mode to false!")
 				mode = false
 				break
 			}
@@ -91,7 +81,7 @@ func main() {
 		if len(*shelfName) != 0 {
 			Shelf.DelShelf(*shelfName)
 		} else {
-			fmt.Println("Failed to remove Shelf. Missing Shelf name!")
+			Settings.Log().Errorln("Failed to remove Shelf. Missing Shelf name!")
 		}
 		break
 
@@ -103,7 +93,7 @@ func main() {
 				fmt.Printf("%s %s\n", n.Name, n.Path)
 			}
 		} else {
-			fmt.Println("No Shelfs available!")
+			Settings.Log().Errorln("No Shelfs available!")
 		}
 		break
 
@@ -136,6 +126,6 @@ func main() {
 		}
 	}
 
-	debugPrintln("Initialization completed!")
-
+	Settings.Log().Debugln("Initialization completed!")
+	Settings.CloseLogFile()
 }

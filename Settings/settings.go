@@ -7,6 +7,8 @@ import (
 	"os"
 	"os/user"
 	"strings"
+
+	"github.com/Sirupsen/logrus"
 )
 
 type ShelfList struct {
@@ -17,26 +19,43 @@ type ShelfList struct {
 
 type Config struct {
 	ConfigPath string      `json:"configPath"`
+	LogPath    string      `json:"logPath"`
 	Debug      bool        `json:"debug"`
 	Shelfs     []ShelfList `json:"shelfs"`
 }
 
 var config *Config
-
-const (
-	debugMarker = string("BookShelf::Settings: ")
-)
+var log *logrus.Logger
+var logFile *os.File
 
 func init() {
 	config = new(Config)
+	log = logrus.New()
+	formatter := new(logrus.TextFormatter)
 
 	user, err := user.Current()
 	if err != nil {
-		fmt.Println(debugMarker + "Failed to obrain user info!")
+		fmt.Println("Failed to obrain user info!")
 		return
 	}
 
 	config.ConfigPath = user.HomeDir + "/.config/BookShelf/config.json"
+	config.LogPath = user.HomeDir + "/.config/BookShelf/bookshelf.log"
+
+	if _, err = os.Stat(config.LogPath); err != nil {
+		os.Create(config.LogPath)
+	}
+
+	if logFile, err = os.OpenFile(config.LogPath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666); err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	formatter.FullTimestamp = true
+
+	log.Out = logFile
+	log.Formatter = formatter
+	log.Level = logrus.InfoLevel
 
 	_, err = os.Stat(config.ConfigPath)
 	if err != nil {
@@ -66,26 +85,22 @@ func createConfig() {
 func readConfig() {
 	file, err := ioutil.ReadFile(config.ConfigPath)
 	if err != nil {
-		fmt.Println(debugMarker + "Failed to open config file!")
+		log.Debugln("Failed to open config file!")
 		return
 	}
 
 	json.Unmarshal(file, config)
 }
 
-func debugPrintln(text string) {
-	if GetDebugMode() {
-		fmt.Println(debugMarker + text)
-	}
-}
-
 func DebugMode(mode bool) {
 	switch mode {
 	case true:
-		debugPrintln("Debug mode enabled!")
+		log.Debugln("Debug mode enabled!")
+		log.Level = logrus.DebugLevel
 		break
 	case false:
-		debugPrintln("Debug mode disabled!")
+		log.Debugln("Debug mode disabled!")
+		log.Level = logrus.InfoLevel
 		break
 	}
 
@@ -105,7 +120,7 @@ func GetDebugMode() bool {
 func ConfigPath(path string) {
 	config.ConfigPath = path
 
-	debugPrintln("ConfigPath set to: " + config.ConfigPath)
+	log.Debug("ConfigPath set to: " + config.ConfigPath)
 }
 
 func GetConfigPath() string {
@@ -115,6 +130,7 @@ func GetConfigPath() string {
 func PrintConfig() {
 	fmt.Println("Bookshelf Settings:")
 	fmt.Printf("\tConfig path: \t%s\n", config.ConfigPath)
+	fmt.Printf("\tLog path: \t%s\n", config.LogPath)
 	fmt.Printf("\tDebug mode: \t%t\n", config.Debug)
 	if len(config.Shelfs) != 0 {
 		fmt.Printf("\tShelfs:\n")
@@ -131,9 +147,17 @@ func GetConfig() *Config {
 }
 
 func ActivateShelf(index int) {
-	for i, _ := range config.Shelfs {
+	for i := range config.Shelfs {
 		config.Shelfs[i].Active = false
 	}
 
 	config.Shelfs[index].Active = true
+}
+
+func CloseLogFile() {
+	logFile.Close()
+}
+
+func Log() *logrus.Logger {
+	return log
 }

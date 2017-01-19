@@ -18,17 +18,7 @@ type Shelf struct {
 	items     int
 }
 
-const (
-	debugMarker = string("BookShelf::Shelf: ")
-)
-
 var defaultPath = Settings.GetConfigPath()[:strings.LastIndex(Settings.GetConfigPath(), "/")]
-
-func debugPrintln(text string) {
-	if Settings.GetDebugMode() {
-		fmt.Println(debugMarker + text)
-	}
-}
 
 func NewShelf(name string, path string) {
 	s := new(Shelf)
@@ -36,7 +26,7 @@ func NewShelf(name string, path string) {
 	if len(name) != 0 {
 		s.Name(name)
 	} else {
-		debugPrintln("Missing new Shelf name!")
+		Settings.Log().Warningln("Missing new Shelf name!")
 		s.Name("Bookshelf")
 	}
 
@@ -59,7 +49,7 @@ func NewShelf(name string, path string) {
 	s.saveShelf()
 	s.addShelfToConfig()
 
-	debugPrintln("New shelf: " + s.ShelfName + " in " + s.ShelfPath)
+	Settings.Log().Debugln("New shelf: " + s.ShelfName + " in " + s.ShelfPath)
 }
 
 func (shelf *Shelf) saveShelf() {
@@ -81,7 +71,7 @@ func DelShelf(name string) {
 
 			_, err := os.Stat(n.Path)
 			if err != nil {
-				fmt.Printf("Failed to remove Shelf! File %s doesn't exists!\n", n.Path)
+				Settings.Log().Warningln("Failed to remove Shelf! File %s doesn't exists!\n", n.Path)
 			} else {
 				os.Remove(n.Path)
 			}
@@ -89,18 +79,17 @@ func DelShelf(name string) {
 			conf.Shelfs[i] = conf.Shelfs[len(conf.Shelfs)-1]
 			conf.Shelfs = conf.Shelfs[:len(conf.Shelfs)-1]
 
-			debugPrintln("Removed Shelf: " + name)
+			Settings.Log().Debugln("Removed Shelf: " + name)
 			Settings.WriteConfig()
 
 			return
-		} else {
-			debugPrintln("Failed to find shelf: " + name)
 		}
+		Settings.Log().Errorln("Failed to find shelf: " + name)
 	}
 }
 
 func (shelf *Shelf) Name(name string) {
-	debugPrintln("Set Shelf name to: " + name)
+	Settings.Log().Debugln("Set Shelf name to: " + name)
 	shelf.ShelfName = name
 }
 
@@ -116,7 +105,7 @@ func (shelf *Shelf) addShelfToConfig() {
 	conf := Settings.GetConfig()
 
 	//When new shelf is available make it active by default
-	for i, _ := range conf.Shelfs {
+	for i := range conf.Shelfs {
 		conf.Shelfs[i].Active = false
 	}
 

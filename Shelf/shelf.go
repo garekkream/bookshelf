@@ -18,7 +18,10 @@ type Shelf struct {
 	items     int
 }
 
-var defaultPath = Settings.GetConfigPath()[:strings.LastIndex(Settings.GetConfigPath(), "/")]
+var (
+	defaultPath  = Settings.GetConfigPath()[:strings.LastIndex(Settings.GetConfigPath(), "/")]
+	currentShelf = new(Shelf)
+)
 
 func NewShelf(name string, path string) {
 	s := new(Shelf)
@@ -49,6 +52,8 @@ func NewShelf(name string, path string) {
 	s.saveShelf()
 	s.addShelfToConfig()
 
+	readShelf(s.GetPath())
+
 	Settings.Log().Debugln("New shelf: " + s.ShelfName + " in " + s.ShelfPath)
 }
 
@@ -56,6 +61,18 @@ func (shelf *Shelf) saveShelf() {
 	b, _ := json.Marshal(shelf)
 
 	ioutil.WriteFile(shelf.GetPath(), b, os.ModeAppend)
+	Settings.Log().Debugf("Shelf %s saved as %s.\n", shelf.GetName(), shelf.GetPath())
+}
+
+func ReadShelf(path string) {
+	file, err := ioutil.ReadFile(path)
+	if err != nil {
+		Settings.Log().Errorln(err)
+		return
+	}
+
+	json.Unmarshal(file, currentShelf)
+	fmt.Println(currentShelf)
 }
 
 func DelShelf(name string) {
@@ -71,7 +88,7 @@ func DelShelf(name string) {
 
 			_, err := os.Stat(n.Path)
 			if err != nil {
-				Settings.Log().Warningln("Failed to remove Shelf! File %s doesn't exists!\n", n.Path)
+				Settings.Log().Warningln("Failed to remove Shelf! File %s doesn't exists! (err: %s)\n", n.Path, err)
 			} else {
 				os.Remove(n.Path)
 			}
@@ -112,4 +129,17 @@ func (shelf *Shelf) addShelfToConfig() {
 	conf.Shelfs = append(conf.Shelfs, Settings.ShelfList{shelf.GetName(), shelf.GetPath(), true})
 
 	Settings.WriteConfig()
+}
+
+func getActiveShelfPath() string {
+	shelfs := Settings.GetConfig().Shelfs
+
+	for i := range shelfs {
+		if shelfs[i].Active == true {
+			return shelfs[i].Path
+		}
+	}
+
+	Settings.Log().Debugln("Failed to find active shelf!")
+	return ""
 }

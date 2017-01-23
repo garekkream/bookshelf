@@ -9,12 +9,14 @@ import (
 	"strings"
 	"time"
 
+	"github.com/garekkream/BookShelf/Book"
 	"github.com/garekkream/BookShelf/Settings"
 )
 
 type Shelf struct {
-	ShelfName string `json:"name"`
-	ShelfPath string `json:"path"`
+	ShelfName string      `json:"name"`
+	ShelfPath string      `json:"path"`
+	Books     []Book.Book `json:"books"`
 	items     int
 }
 
@@ -141,4 +143,57 @@ func getActiveShelfPath() string {
 
 	Settings.Log().Debugln("Failed to find active shelf!")
 	return ""
+}
+
+func findFreeBookId() int {
+	idx := len(currentShelf.Books)
+
+	if (idx > 0) && (idx < Book.GetMaxBooksCnt()) {
+		flag := false
+		i := 0
+
+		for i < Book.GetMaxBooksCnt() {
+			for _, b := range currentShelf.Books {
+				if b.GetId() == i {
+					flag = true
+					break
+				}
+			}
+
+			if flag {
+				i++
+				flag = false
+			} else {
+				return i
+			}
+		}
+	}
+
+	Settings.Log().Errorln("Failed to find free ID!")
+	return -1
+}
+
+func AddBookToShelf(book *Book.Book) {
+	book.Id(findFreeBookId())
+	currentShelf.Books = append(currentShelf.Books, *book)
+}
+
+func RemoveBookFromShelf(id int) {
+	for i, book := range currentShelf.Books {
+		if book.GetId() == id {
+			l := len(currentShelf.Books)
+
+			currentShelf.Books[i] = currentShelf.Books[l-1]
+			currentShelf.Books = currentShelf.Books[:l-1]
+		} else {
+			Settings.Log().Errorf("Failed to find book with id = %d!\n", id)
+		}
+	}
+}
+
+func ListBooks() {
+	fmt.Println(currentShelf.GetName())
+	for _, book := range currentShelf.Books {
+		fmt.Printf("\t%d \t%s \t%s\n", book.GetId(), book.GetTitle(), book.GetAuthor())
+	}
 }

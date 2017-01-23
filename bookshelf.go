@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	"github.com/garekkream/BookShelf/Book"
 	"github.com/garekkream/BookShelf/Settings"
 	"github.com/garekkream/BookShelf/Shelf"
 
@@ -27,10 +28,19 @@ var (
 	shelfName   = shelf.Flag("name", "New shelf name").String()
 	shelfPath   = shelf.Flag("path", "Storage path for new shelf").String()
 	shelfIndex  = shelf.Flag("index", "Access shelfs using index").Int()
+
+	book       = parser.Command("book", "Book manipulation command")
+	bookNew    = book.Command("new", "Create new book in active shelf")
+	bookDel    = book.Command("del", "Delete book from active shelf")
+	bookList   = book.Command("list", "List all books in active shelf")
+	bookTitle  = book.Flag("title", "Set book title").Short('t').String()
+	bookAuthor = book.Flag("author", "Set book author").Short('a').String()
+	bookId     = book.Flag("id", "Access book using id").Short('i').Int()
 )
 
 func init() {
 	*shelfIndex = -1
+	*bookId = -1
 }
 
 func main() {
@@ -125,6 +135,19 @@ func main() {
 			Shelf.ReadShelf(shelfs[*shelfIndex].Path)
 			break
 		}
+
+	case "book new":
+		b := Book.AddBook(*bookTitle, *bookAuthor)
+		Shelf.AddBookToShelf(b)
+
+	case "book del":
+		if *bookId != -1 {
+			Shelf.RemoveBookFromShelf(*bookId)
+		}
+		Settings.Log().Error("Unable to remove book! Book id missing!")
+
+	case "book list":
+		Shelf.ListBooks()
 	}
 
 	Settings.Log().Debugln("Initialization completed!")

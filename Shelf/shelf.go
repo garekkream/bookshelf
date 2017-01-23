@@ -52,7 +52,7 @@ func NewShelf(name string, path string) {
 	s.saveShelf()
 	s.addShelfToConfig()
 
-	readShelf(s.GetPath())
+	ReadShelf(s.GetPath())
 
 	Settings.Log().Debugln("New shelf: " + s.ShelfName + " in " + s.ShelfPath)
 }
@@ -72,7 +72,6 @@ func ReadShelf(path string) {
 	}
 
 	json.Unmarshal(file, currentShelf)
-	fmt.Println(currentShelf)
 }
 
 func DelShelf(name string) {

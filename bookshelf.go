@@ -104,8 +104,8 @@ func main() {
 			for i, n := range shelfs {
 				if n.Name == *shelfName {
 					Settings.ActivateShelf(i)
-
 					Settings.WriteConfig()
+					Shelf.ReadShelf(n.Path)
 					break
 				}
 			}
@@ -122,6 +122,7 @@ func main() {
 			}
 
 			Settings.WriteConfig()
+			Shelf.ReadShelf(shelfs[*shelfIndex].Path)
 			break
 		}
 	}

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/garekkream/BookShelf/Book"
 	"github.com/garekkream/BookShelf/Settings"
@@ -50,104 +51,109 @@ func main() {
 
 	parser.Version(date + ver)
 
-	switch parser.Parse() {
-	case "settings":
-		if *settingsPrint {
-			Settings.PrintConfig()
-		}
+	if len(os.Args) < 3 {
+		webkitInit()
+	} else {
 
-		if len(*settingsDebug) > 0 {
-			switch *settingsDebug {
-			case "y":
-				mode = true
-				break
-			case "n":
-				mode = false
-				break
-			default:
-				Settings.Log().Warningln("Unknown debug status! Setting debug mode to false!")
-				mode = false
-				break
+		switch parser.Parse() {
+		case "settings":
+			if *settingsPrint {
+				Settings.PrintConfig()
 			}
-			Settings.DebugModeSave(mode)
-		}
 
-	case "shelf new":
-		var n string
-		var p string
-
-		if len(*shelfName) != 0 {
-			n = *shelfName
-		}
-
-		if len(*shelfPath) != 0 {
-			p = *shelfPath
-		}
-
-		Shelf.NewShelf(n, p)
-		break
-
-	case "shelf del":
-		if len(*shelfName) != 0 {
-			Shelf.DelShelf(*shelfName)
-		} else {
-			Settings.Log().Errorln("Failed to remove Shelf. Missing Shelf name!")
-		}
-		break
-
-	case "shelf list":
-		shelfs := Settings.GetConfig().Shelfs
-
-		if len(shelfs) > 0 {
-			for _, n := range Settings.GetConfig().Shelfs {
-				fmt.Printf("%s %s\n", n.Name, n.Path)
-			}
-		} else {
-			Settings.Log().Errorln("No Shelfs available!")
-		}
-		break
-
-	case "shelf active":
-		if len(*shelfName) != 0 {
-			shelfs := Settings.GetConfig().Shelfs
-
-			for i, n := range shelfs {
-				if n.Name == *shelfName {
-					Settings.ActivateShelf(i)
-					Settings.WriteConfig()
-					Shelf.ReadShelf(n.Path)
+			if len(*settingsDebug) > 0 {
+				switch *settingsDebug {
+				case "y":
+					mode = true
+					break
+				case "n":
+					mode = false
+					break
+				default:
+					Settings.Log().Warningln("Unknown debug status! Setting debug mode to false!")
+					mode = false
 					break
 				}
+				Settings.DebugModeSave(mode)
+			}
+
+		case "shelf new":
+			var n string
+			var p string
+
+			if len(*shelfName) != 0 {
+				n = *shelfName
+			}
+
+			if len(*shelfPath) != 0 {
+				p = *shelfPath
+			}
+
+			Shelf.NewShelf(n, p)
+			break
+
+		case "shelf del":
+			if len(*shelfName) != 0 {
+				Shelf.DelShelf(*shelfName)
+			} else {
+				Settings.Log().Errorln("Failed to remove Shelf. Missing Shelf name!")
 			}
 			break
-		}
 
-		if *shelfIndex != -1 {
+		case "shelf list":
 			shelfs := Settings.GetConfig().Shelfs
 
-			if *shelfIndex < len(shelfs) &&
-				*shelfIndex >= 0 {
+			if len(shelfs) > 0 {
+				for _, n := range Settings.GetConfig().Shelfs {
+					fmt.Printf("%s %s\n", n.Name, n.Path)
+				}
+			} else {
+				Settings.Log().Errorln("No Shelfs available!")
+			}
+			break
 
-				Settings.ActivateShelf(*shelfIndex)
+		case "shelf active":
+			if len(*shelfName) != 0 {
+				shelfs := Settings.GetConfig().Shelfs
+
+				for i, n := range shelfs {
+					if n.Name == *shelfName {
+						Settings.ActivateShelf(i)
+						Settings.WriteConfig()
+						Shelf.ReadShelf(n.Path)
+						break
+					}
+				}
+				break
 			}
 
-			Settings.WriteConfig()
-			Shelf.ReadShelf(shelfs[*shelfIndex].Path)
-			break
+			if *shelfIndex != -1 {
+				shelfs := Settings.GetConfig().Shelfs
+
+				if *shelfIndex < len(shelfs) &&
+					*shelfIndex >= 0 {
+
+					Settings.ActivateShelf(*shelfIndex)
+				}
+
+				Settings.WriteConfig()
+				Shelf.ReadShelf(shelfs[*shelfIndex].Path)
+				break
+			}
+
+		case "book new":
+			b := Book.AddBook(*bookTitle, *bookAuthor)
+			Shelf.AddBookToShelf(b)
+
+		case "book del":
+			if *bookId != -1 {
+				Shelf.RemoveBookFromShelf(*bookId)
+			}
+			Settings.Log().Error("Unable to remove book! Book id missing!")
+
+		case "book list":
+			Shelf.ListBooks()
 		}
-
-	case "book new":
-		b := Book.AddBook(*bookTitle, *bookAuthor)
-		Shelf.AddBookToShelf(b)
-
-	case "book del":
-		if *bookId != -1 {
-			Shelf.RemoveBookFromShelf(*bookId)
-		}
-		Settings.Log().Error("Unable to remove book! Book id missing!")
-
-	case "book list":
-		Shelf.ListBooks()
 	}
 
 	Settings.Log().Debugln("Initialization completed!")

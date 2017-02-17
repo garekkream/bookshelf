@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/garekkream/BookShelf/Book"
-	"github.com/garekkream/BookShelf/Settings"
-	"github.com/garekkream/BookShelf/Shelf"
+	"github.com/garekkream/bookshelf/Book"
+	"github.com/garekkream/bookshelf/Settings"
+	"github.com/garekkream/bookshelf/Shelf"
 
 	parser "gopkg.in/alecthomas/kingpin.v2"
 )
@@ -52,6 +52,7 @@ func main() {
 	parser.Version(date + ver)
 
 	if len(os.Args) < 3 {
+		websocketInit()
 		webkitInit()
 	} else {
 

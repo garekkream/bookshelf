@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/garekkream/BookShelf/Book"
-	"github.com/garekkream/BookShelf/Settings"
+	"github.com/garekkream/bookshelf/Book"
+	"github.com/garekkream/bookshelf/Settings"
 )
 
 type Shelf struct {

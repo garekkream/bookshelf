@@ -1,10 +1,9 @@
 package main
 
 import (
-	"io/ioutil"
 	"runtime"
 
-	"github.com/garekkream/BookShelf/Settings"
+	"github.com/garekkream/bookshelf/Settings"
 	"github.com/gotk3/gotk3/glib"
 	"github.com/gotk3/gotk3/gtk"
 	"github.com/sourcegraph/go-webkit2/webkit2"
@@ -31,9 +30,7 @@ func webkitInit() {
 	defer webView.Destroy()
 
 	glib.IdleAdd(func() bool {
-		file, _ := ioutil.ReadFile("Web/index.html")
-
-		webView.LoadHTML(string(file), "Web")
+		webView.LoadURI("http://localhost:1234")
 		return false
 	})
 

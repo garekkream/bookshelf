@@ -1,6 +1,6 @@
 package Book
 
-import "github.com/garekkream/BookShelf/Settings"
+import "github.com/garekkream/bookshelf/Settings"
 
 type Book struct {
 	BookID     int    `json:"id"`

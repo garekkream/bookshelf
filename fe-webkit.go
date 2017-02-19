@@ -29,6 +29,9 @@ func webkitInit() {
 	webView := webkit2.NewWebView()
 	defer webView.Destroy()
 
+	settings := webView.Settings()
+	settings.SetEnableWriteConsoleMessagesToStdout(true)
+
 	glib.IdleAdd(func() bool {
 		webView.LoadURI("http://localhost:1234")
 		return false

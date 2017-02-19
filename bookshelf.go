@@ -13,7 +13,7 @@ import (
 
 var (
 	ver  = "none"
-	date = "note"
+	date = "none"
 
 	debug = parser.Flag("debug", "Enable debug mode for this session").Bool()
 
@@ -51,9 +51,13 @@ func main() {
 
 	parser.Version(date + ver)
 
+	defer Settings.CloseLogFile()
+
 	if len(os.Args) < 3 {
 		websocketInit()
 		webkitInit()
+
+		Settings.Log().Debugln("Initialization completed!")
 	} else {
 
 		switch parser.Parse() {
@@ -156,7 +160,4 @@ func main() {
 			Shelf.ListBooks()
 		}
 	}
-
-	Settings.Log().Debugln("Initialization completed!")
-	Settings.CloseLogFile()
 }

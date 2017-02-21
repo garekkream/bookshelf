@@ -1,10 +1,67 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css">
+
 
 <style>
   #btnNewShelf {
     width: 150px;
     height: 150px;
+  }
+
+  .slideout-widget {
+  	position: fixed;
+  	right: -15em;
+  	top: 50%;
+  	transition: right .4s;
+  	width: 15em;
+  	z-index: 10;
+  }
+
+  .slideout-widget:hover {
+  	right: 0;
+  }
+
+  .slideout-widget-handler,
+  .slideout-widget-content {
+  	background: #eee;
+  	border: 1px solid #ddd;
+  	padding: 1em .5em;
+  }
+
+  .slideout-widget-handler {
+  	border-right: none;
+  	left: -3em;
+  	position: absolute;
+  	text-align: center;
+  	width: 3em;
+  }
+  .slideout-widget-content {
+  	border-width: 1px 0;
+  	overflow: hidden;
+  	width: 100%;
+  	z-index: 11;
+  }
+
+  .widget-settings .slideout-widget-handler,
+  .widget-settings .slideout-widget-content {
+  	background: #3c5b9b;
+  	border: none;
+  }
+
+  .widget-settings,
+  .widget-settings a {
+  	color: #fff;
+  }
+
+  .slideout-big {
+  	right: -20em;
+  	width: 20em;
+  }
+
+  /* demo */
+  .widget-settings {
+  	top: 50%;
   }
 </style>
 
@@ -15,6 +72,7 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
 
 <script>
   var socket = io();
@@ -40,17 +98,8 @@
   </div>
 
   <div class="row">
-    <div>
-      <h6 class="text-center"><small id="version">(version)</small></h6>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-6 vertical-align horizontal-align">
-      <button id="btnNewShelf" class="btn btn-primary">New Shelf</button>
-    </div>
-    <div class="col-md-6">
-      <h4 class="text-info text-center  "><i class="fa fa-book"></i>  Latest shelfs  <i class="fa fa-book"></i></h4>
+    <div class="col-md-12">
+      <h4 class="text-info text-center"><i class="fa fa-book"></i>  Latest shelfs  <i class="fa fa-book"></i></h4>
       <div clas="well">
         <ul id="availableShelfs" class="list-group-item">
         </ul>
@@ -58,4 +107,28 @@
     </div>
   </div>
 </div>
+
+<div class="slideout-widget widget-settings">
+  <div class="slideout-widget-handler">
+    <i class="fa fa-cog"></i>
+  </div>
+  <div class="slideout-widget-content">
+    Settings
+  </div>
+</div>
+
+<div class="fixed-action-btn click-to-toggle">
+  <a class="btn-floating btn-large"><i class="fa fa-plus"></i></a>
+  <ul>
+    <li><a class="btn-floating"></a></li>
+    <li><a class="btn-floating"></a></li>
+  </ul>
+</div>
+
+<div class="footer">
+  <div class="container">
+    <h6 class="text-center"><small id="version">(version)</small></h6>
+  </div>
+</div>
+
 </body>

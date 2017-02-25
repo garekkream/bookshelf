@@ -1,78 +1,11 @@
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css">
+<link rel="stylesheet" type="text/css" href="css/style.css">
+<link rel="stylesheet" type="text/css" href="resources/bootstrap/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="resources/font-awesome/css/font-awesome.css">
+<link rel="stylesheet" type="text/css" href="resources/materialize/css/materialize.css">
 
-
-<style>
-  #btnNewShelf {
-    width: 150px;
-    height: 150px;
-  }
-
-  .slideout-widget {
-  	position: fixed;
-  	right: -15em;
-  	top: 50%;
-  	transition: right .4s;
-  	width: 15em;
-  	z-index: 10;
-  }
-
-  .slideout-widget:hover {
-  	right: 0;
-  }
-
-  .slideout-widget-handler,
-  .slideout-widget-content {
-  	background: #eee;
-  	border: 1px solid #ddd;
-  	padding: 1em .5em;
-  }
-
-  .slideout-widget-handler {
-  	border-right: none;
-  	left: -3em;
-  	position: absolute;
-  	text-align: center;
-  	width: 3em;
-  }
-  .slideout-widget-content {
-  	border-width: 1px 0;
-  	overflow: hidden;
-  	width: 100%;
-  	z-index: 11;
-  }
-
-  .widget-settings .slideout-widget-handler,
-  .widget-settings .slideout-widget-content {
-  	background: #3c5b9b;
-  	border: none;
-  }
-
-  .widget-settings,
-  .widget-settings a {
-  	color: #fff;
-  }
-
-  .slideout-big {
-  	right: -20em;
-  	width: 20em;
-  }
-
-  /* demo */
-  .widget-settings {
-  	top: 50%;
-  }
-</style>
-
-<!--
-<script src="scripts/jquery-3.1.1.min.js" type="text/javascript"></script>
-<script src="scripts/socket.io-1.4.5.js" type="text/javascript"></script>
--->
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
+<script src="scripts/jquery-3.1.1.js"/>
+<script src="scripts/socket.io-1.4.5.js"></script>
+<script src="resources/materialize/js/materialize.min.js"></script>
 
 <script>
   var socket = io();

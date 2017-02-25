@@ -1,9 +1,10 @@
 <link rel="stylesheet" type="text/css" href="css/style.css">
+<link rel="stylesheet" type="text/css" href="css/settingsbar.css">
 <link rel="stylesheet" type="text/css" href="resources/bootstrap/css/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="resources/font-awesome/css/font-awesome.css">
 <link rel="stylesheet" type="text/css" href="resources/materialize/css/materialize.css">
 
-<script src="scripts/jquery-3.1.1.js"/>
+<script src="scripts/jquery-3.1.1.js"></script>
 <script src="scripts/socket.io-1.4.5.js"></script>
 <script src="resources/materialize/js/materialize.min.js"></script>
 
@@ -16,6 +17,14 @@
       $("#version").text(msg);
     });
   })
+
+  function openSettings() {
+    document.getElementById("settingsBar").style.width = "250px";
+  }
+
+  function closeSettings() {
+    document.getElementById("settingsBar").style.width = "0";
+  }
 </script>
 
 <head>
@@ -46,9 +55,14 @@
     <i class="fa fa-cog"></i>
   </div>
   <div class="slideout-widget-content">
-    Settings
+    <span style="cursor:pointer" onclick="openSettings()">Settings</span>
   </div>
 </div>
+
+<div id="settingsBar" class="settingsbar">
+  <a href="javascript:void(0)" onclick="closeSettings()">Settings</a>
+</div>
+
 
 <div class="fixed-action-btn click-to-toggle">
   <a class="btn-floating btn-large"><i class="fa fa-plus"></i></a>
@@ -63,5 +77,4 @@
     <h6 class="text-center"><small id="version">(version)</small></h6>
   </div>
 </div>
-
 </body>

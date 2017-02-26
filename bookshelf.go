@@ -53,7 +53,7 @@ func main() {
 
 	defer Settings.CloseLogFile()
 
-	if len(os.Args) < 3 {
+	if len(os.Args) < 2 {
 		websocketInit()
 		webkitInit()
 

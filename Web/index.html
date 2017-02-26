@@ -7,6 +7,7 @@
 <script src="scripts/jquery-3.1.1.js"></script>
 <script src="scripts/socket.io-1.4.5.js"></script>
 <script src="resources/materialize/js/materialize.min.js"></script>
+<script src="resources/bootstrap/js/bootstrap.js"></script>
 
 <script>
   var socket = io();
@@ -16,10 +17,19 @@
     socket.on("setVersion", function(msg) {
       $("#version").text(msg);
     });
+
+    socket.emit("getDebugMode")
+    socket.on("setDebugMode", function(msg) {
+      if (String(msg) === "true") {
+        $("#debugMode").attr("checked", true);
+      } else {
+        $("#debugMode").attr("checked", false);
+      }
+    })
   })
 
   function openSettings() {
-    document.getElementById("settingsBar").style.width = "250px";
+    document.getElementById("settingsBar").style.width = "30%";
   }
 
   function closeSettings() {
@@ -60,7 +70,25 @@
 </div>
 
 <div id="settingsBar" class="settingsbar">
-  <a href="javascript:void(0)" onclick="closeSettings()">Settings</a>
+  <div class="well">
+    <div class="text-right">
+      <a href="javascript:void(0)" onclick="closeSettings()"><h6><small>close</small></h6></a>
+    </div>
+
+    <div class="text-center" style="margin-bottom: 3em">
+      <i class="fa fa-cog fa-3x"></i><br />
+      <h6 class="text-center"><small id="version">(version)</small></h6>
+    </div>
+
+    <div class="row switch" style="margin-bottom: 3em">
+      <div class="col-md-6 text-left">
+        Debug Mode:
+      </div>
+      <div class="col-md-6">
+        <label><input id="debugMode" type="checkbox"><span class="lever"></span></label>
+      </div>
+    </div>
+  </div>
 </div>
 
 
@@ -70,11 +98,5 @@
     <li><a class="btn-floating"></a></li>
     <li><a class="btn-floating"></a></li>
   </ul>
-</div>
-
-<div class="footer">
-  <div class="container">
-    <h6 class="text-center"><small id="version">(version)</small></h6>
-  </div>
 </div>
 </body>

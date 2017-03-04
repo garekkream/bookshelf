@@ -8,34 +8,7 @@
 <script src="scripts/socket.io-1.4.5.js"></script>
 <script src="resources/materialize/js/materialize.min.js"></script>
 <script src="resources/bootstrap/js/bootstrap.js"></script>
-
-<script>
-  var socket = io();
-
-  $(function() {
-    socket.emit("getVersion")
-    socket.on("setVersion", function(msg) {
-      $("#version").text(msg);
-    });
-
-    socket.emit("getDebugMode")
-    socket.on("setDebugMode", function(msg) {
-      if (String(msg) === "true") {
-        $("#debugMode").attr("checked", true);
-      } else {
-        $("#debugMode").attr("checked", false);
-      }
-    })
-  })
-
-  function openSettings() {
-    document.getElementById("settingsBar").style.width = "30%";
-  }
-
-  function closeSettings() {
-    document.getElementById("settingsBar").style.width = "0";
-  }
-</script>
+<script src="scripts/sockethndl.js"></script>
 
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -50,10 +23,10 @@
   </div>
 
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-sm-12">
       <h4 class="text-info text-center"><i class="fa fa-book"></i>  Latest shelfs  <i class="fa fa-book"></i></h4>
       <div clas="well">
-        <ul id="availableShelfs" class="list-group-item">
+        <ul id="availableShelfs" >
         </ul>
       </div>
     </div>
@@ -81,10 +54,10 @@
     </div>
 
     <div class="row switch" style="margin-bottom: 3em">
-      <div class="col-md-6 text-left">
+      <div class="col-sm-6 text-left">
         Debug Mode:
       </div>
-      <div class="col-md-6">
+      <div class="col-sm-6">
         <label><input id="debugMode" type="checkbox"><span class="lever"></span></label>
       </div>
     </div>

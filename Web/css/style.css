@@ -1,6 +1,5 @@
-#btnNewShelf {
-  width: 150px;
-  height: 150px;
+#activeShelf {
+  color: red;
 }
 
 .slideout-widget {

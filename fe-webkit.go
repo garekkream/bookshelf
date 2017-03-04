@@ -19,7 +19,7 @@ func webkitInit() {
 	}
 
 	win.SetTitle("Bookshelf")
-	win.SetSizeRequest(1000, 800)
+	win.SetSizeRequest(1100, 800)
 	win.SetResizable(false)
 
 	win.Connect("destroy", func() {

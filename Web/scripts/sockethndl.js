@@ -30,16 +30,25 @@ function getShelfs() {
 
   $("#availableShelfs").append(
     $('<li>').html(
-      "<div class='container' " + activeShelf + "><div class='col-sm-2'>" + msg.shelfName + "</div><div class='col-sm-2'>" + msg.shelfPath + "</div></div>"))
+      "<div class='container' " + activeShelf + "> \
+        <div class='col-sm-3'>" + msg.shelfName + "</div> \
+        <div class='col-sm-3'><a class='btn''>Open</a></div> \
+        <div class='col-sm-3'><a class='btn' data='"+ msg.shelfName +"' onclick='removeShelf(this)'>Remove</a></div> \
+      </div>"))
   });
 }
 
 $(function() {
   getVersion();
   getShelfs();
-  getDebugMode();
+  //getDebugMode();
 })
 
+function removeShelf(data) {
+  socket.emit("removeShelf", data.getAttribute('data'), function(data) {
+    console.log(data)
+  });
+}
 
 function openSettings() {
   document.getElementById("settingsBar").style.width = "30%";

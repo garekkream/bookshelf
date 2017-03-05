@@ -76,7 +76,7 @@ func ReadShelf(path string) {
 	json.Unmarshal(file, currentShelf)
 }
 
-func DelShelf(name string) {
+func DelShelf(name string) error {
 	conf := Settings.GetConfig()
 
 	for i, n := range conf.Shelfs {
@@ -89,10 +89,11 @@ func DelShelf(name string) {
 
 			_, err := os.Stat(n.Path)
 			if err != nil {
-				Settings.Log().Warningln("Failed to remove Shelf! File %s doesn't exists! (err: %s)\n", n.Path, err)
-			} else {
-				os.Remove(n.Path)
+				Settings.Log().Warningf("Failed to remove Shelf! File %s doesn't exists! (err: %v)\n", n.Path, err)
+				return err
 			}
+
+			os.Remove(n.Path)
 
 			conf.Shelfs[i] = conf.Shelfs[len(conf.Shelfs)-1]
 			conf.Shelfs = conf.Shelfs[:len(conf.Shelfs)-1]
@@ -100,10 +101,18 @@ func DelShelf(name string) {
 			Settings.Log().Debugln("Removed Shelf: " + name)
 			Settings.WriteConfig()
 
-			return
+			return nil
 		}
-		Settings.Log().Errorln("Failed to find shelf: " + name)
+
+		errorStr := "Failed to find shelf: " + name
+		Settings.Log().Errorln(errorStr)
+		return fmt.Errorf(errorStr)
 	}
+
+	errorStr := "Shelf list is empty!"
+
+	Settings.Log().Errorln(errorStr)
+	return fmt.Errorf(errorStr)
 }
 
 func (shelf *Shelf) Name(name string) {

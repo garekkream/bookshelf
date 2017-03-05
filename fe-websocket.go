@@ -11,6 +11,7 @@ func websocketHandlers(server *socketio.Server) {
 	server.On("getVersion", hndlVersion)
 	server.On("getDebugMode", hndlDebugMode)
 	server.On("getShelfs", hndlListShelf)
+	server.On("removeShelf", hndlRemoveShelf)
 }
 
 func websocketInit() {

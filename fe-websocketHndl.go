@@ -2,6 +2,8 @@ package main
 
 import (
 	"github.com/garekkream/bookshelf/Settings"
+	"github.com/garekkream/bookshelf/Shelf"
+	"github.com/googollee/go-socket.io"
 )
 
 func hndlVersion(so socketio.Socket, err error) {
@@ -23,4 +25,13 @@ func hndlListShelf(so socketio.Socket, err error) {
 
 		so.Emit("setShelfs", message)
 	}
+}
+
+func hndlRemoveShelf(bookshelf string) string {
+	err := Shelf.DelShelf(bookshelf)
+	if err != nil {
+		return err.Error()
+	}
+
+	return ""
 }

@@ -33,5 +33,5 @@ func hndlRemoveShelf(bookshelf string) string {
 		return err.Error()
 	}
 
-	return ""
+	return bookshelf
 }

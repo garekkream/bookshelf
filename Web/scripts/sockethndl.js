@@ -29,7 +29,7 @@ function getShelfs() {
   }
 
   $("#availableShelfs").append(
-    $('<li>').html(
+    $('<li>').attr('id', msg.shelfName).html(
       "<div class='container' " + activeShelf + "> \
         <div class='col-sm-3'>" + msg.shelfName + "</div> \
         <div class='col-sm-3'><a class='btn''>Open</a></div> \
@@ -46,8 +46,12 @@ $(function() {
 
 function removeShelf(data) {
   socket.emit("removeShelf", data.getAttribute('data'), function(data) {
-    console.log(data)
-  });
+    var str = data
+    if (data.length > 1) {
+      document.getElementById(data).remove();
+    } else {
+      alert(data);
+      }});
 }
 
 function openSettings() {

@@ -76,12 +76,28 @@ func ReadShelf(path string) {
 	json.Unmarshal(file, currentShelf)
 }
 
+func isShelfListEmpty() bool {
+	conf := Settings.GetConfig()
+
+	if len(conf.Shelfs) > 0 {
+		return false
+	} else {
+		return true
+	}
+}
+
 func DelShelf(name string) error {
 	conf := Settings.GetConfig()
 
+	if isShelfListEmpty() {
+		errorStr := "Shelf list is empty!"
+
+		Settings.Log().Errorln(errorStr)
+		return fmt.Errorf(errorStr)
+	}
+
 	for i, n := range conf.Shelfs {
 		if n.Name == name {
-
 			// If removing currently active shelf, activate first one
 			if n.Active && len(conf.Shelfs) > 0 {
 				conf.Shelfs[0].Active = true
@@ -103,14 +119,9 @@ func DelShelf(name string) error {
 
 			return nil
 		}
-
-		errorStr := "Failed to find shelf: " + name
-		Settings.Log().Errorln(errorStr)
-		return fmt.Errorf(errorStr)
 	}
 
-	errorStr := "Shelf list is empty!"
-
+	errorStr := "Failed to find shelf: " + name
 	Settings.Log().Errorln(errorStr)
 	return fmt.Errorf(errorStr)
 }

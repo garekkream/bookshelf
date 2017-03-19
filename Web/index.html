@@ -1,8 +1,6 @@
-<link rel="stylesheet" type="text/css" href="css/style.css">
-<link rel="stylesheet" type="text/css" href="css/settingsbar.css">
+<link rel="stylesheet" type="text/css" href="css/leftmenu.css">
 <link rel="stylesheet" type="text/css" href="resources/bootstrap/css/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="resources/font-awesome/css/font-awesome.css">
-<link rel="stylesheet" type="text/css" href="resources/materialize/css/materialize.css">
 
 <script src="scripts/jquery-3.1.1.js"></script>
 <script src="scripts/socket.io-1.4.5.js"></script>
@@ -14,62 +12,66 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
+
 <body>
-<div class="container">
-  <div class="row">
-    <div>
-      <h1 class="text-primary text-center">Welcome</h1>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-sm-12">
-      <h4 class="text-info text-center"><i class="fa fa-book"></i>  Latest shelfs  <i class="fa fa-book"></i></h4>
-      <div clas="well">
-        <ul id="availableShelfs" >
-        </ul>
+  <div class="section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 class="text-center">Bookshelf</h1>
+        </div>
       </div>
     </div>
   </div>
-</div>
-
-<div class="slideout-widget widget-settings">
-  <div class="slideout-widget-handler">
-    <i class="fa fa-cog"></i>
-  </div>
-  <div class="slideout-widget-content">
-    <span style="cursor:pointer" onclick="openSettings()">Settings</span>
-  </div>
-</div>
-
-<div id="settingsBar" class="settingsbar">
-  <div class="well">
-    <div class="text-right">
-      <a href="javascript:void(0)" onclick="closeSettings()"><h6><small>close</small></h6></a>
-    </div>
-
-    <div class="text-center" style="margin-bottom: 3em">
-      <i class="fa fa-cog fa-3x"></i><br />
-      <h6 class="text-center"><small id="version">(version)</small></h6>
-    </div>
-
-    <div class="row switch" style="margin-bottom: 3em">
-      <div class="col-sm-6 text-left">
-        Debug Mode:
-      </div>
-      <div class="col-sm-6">
-        <label><input id="debugMode" type="checkbox"><span class="lever"></span></label>
+  <div class="section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 text-center">
+          <h4 class="text-center">New Shelf</h4>
+          <i class="fa fa-5x fa-book" style="font-size: 128px;"></i>
+        </div>
+        <div class="col-md-6">
+          <h4 class="text-center">Available Shelfs</h4>
+          <ul class="list-group" id="availableShelfs">
+          </ul>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
+  <div class="footer navbar-fixed-bottom text-center">
+    <h6><small id="version">(version)</small></h6>
+  </div>
 
-<div class="fixed-action-btn click-to-toggle">
-  <a class="btn-floating btn-large"><i class="fa fa-plus"></i></a>
-  <ul>
-    <li><a class="btn-floating"></a></li>
-    <li><a class="btn-floating"></a></li>
-  </ul>
-</div>
+  <!-- <div class="container">
+    <div class="row">
+  		<div id="leftSLideBar" class="hidden-xs hidden-sm">
+      <div class="panel panel-default">
+          <div class="panel-leftheading">
+              <h3 class="panel-lefttitle">123</h3>
+          </div>
+          <div class="panel-rightbody">
+              <div>
+
+              </div>
+          </div>
+          <div class="clearfix">
+          </div>
+      </div>
+    </div>
+
+    <div id="rightSLideBar" class="hidden-xs hidden-sm">
+      <div class="panel panel-default">
+          <div class="panel-leftheading">
+              <h3 class="panel-lefttitle"><i class="fa fa-mobile"></i> 1111</h3>
+          </div>
+          <div class="panel-rightbody">
+
+          </div>
+          <div class="clearfix">
+          </div>
+      </div>
+    </div>
+  </div> -->
+
 </body>

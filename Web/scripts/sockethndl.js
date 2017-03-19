@@ -25,16 +25,13 @@ function getShelfs() {
   var activeShelf = " "
 
   if(msg.shelfActive === true) {
-    activeShelf = "id='activeShelf'"
+    activeShelf = "activeShelf"
   }
 
-  $("#availableShelfs").append(
-    $('<li>').attr('id', msg.shelfName).html(
-      "<div class='container' " + activeShelf + "> \
-        <div class='col-sm-3'>" + msg.shelfName + "</div> \
-        <div class='col-sm-3'><a class='btn''>Open</a></div> \
-        <div class='col-sm-3'><a class='btn' data='"+ msg.shelfName +"' onclick='removeShelf(this)'>Remove</a></div> \
-      </div>"))
+  $('#availableShelfs').append(
+    $('<li>').attr('id', msg.shelfName).addClass("list-group-item " + activeShelf).html(
+      msg.shelfName + "&emsp; <a><i class='fa fa-upload'></i></a> \
+      &emsp; <a data='"+ msg.shelfName +"' onclick='removeShelf(this)'><i class='fa fa-times-rectangle'></i></a></div>"))
   });
 }
 
@@ -42,17 +39,18 @@ $(function() {
   getVersion();
   getShelfs();
   //getDebugMode();
+
+  socket.on("errorMsg", function(msg) {
+    alert(msg);
+  });
 })
 
 function removeShelf(data) {
   socket.emit("removeShelf", data.getAttribute('data'), function(data) {
-    var str = data
     if (data.length > 1) {
       document.getElementById(data).remove();
-    } else {
-      alert(data);
-      }});
-}
+    }
+})}
 
 function openSettings() {
   document.getElementById("settingsBar").style.width = "30%";

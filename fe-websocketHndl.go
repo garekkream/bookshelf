@@ -27,10 +27,11 @@ func hndlListShelf(so socketio.Socket, err error) {
 	}
 }
 
-func hndlRemoveShelf(bookshelf string) string {
+func hndlRemoveShelf(so socketio.Socket, bookshelf string) string {
 	err := Shelf.DelShelf(bookshelf)
 	if err != nil {
-		return err.Error()
+		so.Emit("errorMsg", err.Error())
+		return ""
 	}
 
 	return bookshelf

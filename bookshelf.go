@@ -54,7 +54,8 @@ func main() {
 	defer Settings.CloseLogFile()
 
 	if len(os.Args) < 2 {
-		websocketInit()
+		restInit()
+		// websocketInit()
 		webkitInit()
 
 		Settings.Log().Debugln("Initialization completed!")

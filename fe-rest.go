@@ -11,6 +11,7 @@ func restInit() {
 	router := mux.NewRouter().StrictSlash(true)
 
 	router.Methods("GET").Path("/version").HandlerFunc(GetVersion)
+	router.Methods("GET").Path("/shelfs").HandlerFunc(GetShelfs)
 	router.PathPrefix("/").Handler(http.FileServer(http.Dir("Web/")))
 
 	go func() {

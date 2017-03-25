@@ -10,8 +10,8 @@ import (
 func restInit() {
 	router := mux.NewRouter().StrictSlash(true)
 
-	router.PathPrefix("/").Handler(http.FileServer(http.Dir("Web/")))
 	router.Methods("GET").Path("/version").HandlerFunc(GetVersion)
+	router.PathPrefix("/").Handler(http.FileServer(http.Dir("Web/")))
 
 	go func() {
 		Settings.Log().Fatal(http.ListenAndServe(":1234", router))

@@ -7,6 +7,14 @@ function getVersion() {
   $.ajax({
     type: "GET",
     url : urll,
+    success : function(data) {
+      var version = data['version'];
+      console.log(version)
+      $("#version").text(version);
+    },
+    failure : function(xhdr, data, err) {
+      console.log(err);
+    }
   })
 }
 

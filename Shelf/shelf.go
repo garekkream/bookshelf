@@ -1,6 +1,8 @@
 package Shelf
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -14,6 +16,7 @@ import (
 )
 
 type Shelf struct {
+	ShelfId   string      `json:"id"`
 	ShelfName string      `json:"name"`
 	ShelfPath string      `json:"path"`
 	Books     []Book.Book `json:"books"`
@@ -25,7 +28,16 @@ var (
 	currentShelf = new(Shelf)
 )
 
-func NewShelf(name string, path string) {
+func generateShelfId(chain string) string {
+	str := []byte(chain + string(time.Now().Minute()) + string(time.Now().Second()))
+
+	sum := md5.New()
+	sum.Write(str)
+
+	return hex.EncodeToString(sum.Sum(nil)[:5])
+}
+
+func NewShelf(name string, path string) string {
 	s := new(Shelf)
 
 	if len(name) != 0 {
@@ -49,6 +61,8 @@ func NewShelf(name string, path string) {
 		s.ShelfPath = defaultPath + "/" + file
 	}
 
+	s.ShelfId = generateShelfId(name + path)
+
 	os.Create(s.ShelfPath)
 
 	s.saveShelf()
@@ -57,6 +71,8 @@ func NewShelf(name string, path string) {
 	ReadShelf(s.GetPath())
 
 	Settings.Log().Debugln("New shelf: " + s.ShelfName + " in " + s.ShelfPath)
+
+	return s.ShelfId
 }
 
 func (shelf *Shelf) saveShelf() {

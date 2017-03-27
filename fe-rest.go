@@ -12,6 +12,8 @@ func restInit() {
 
 	router.Methods("GET").Path("/version").HandlerFunc(GetVersion)
 	router.Methods("GET").Path("/shelfs").HandlerFunc(GetShelfs)
+	router.Methods("POST").Path("/shelfs").HandlerFunc(AddShelf)
+	router.Methods("GET").Path("/settings").HandlerFunc(GetSettings)
 	router.PathPrefix("/").Handler(http.FileServer(http.Dir("Web/")))
 
 	go func() {

@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/user"
+	"path"
 	"strings"
 
 	"github.com/Sirupsen/logrus"
@@ -125,6 +126,10 @@ func ConfigPath(path string) {
 
 func GetConfigPath() string {
 	return config.ConfigPath
+}
+
+func GetConfigDir() string {
+	return path.Dir(config.ConfigPath)
 }
 
 func PrintConfig() {

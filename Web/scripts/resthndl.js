@@ -1,7 +1,6 @@
 var url_host = "http://localhost:1234/"
 
 function getSettings() {
-  console.log("getSettings")
   var urll = url_host + "settings"
 
   $.ajax({
@@ -18,7 +17,6 @@ function getSettings() {
 }
 
 function getVersion() {
-  console.log("getVersion")
   var urll = url_host + "version"
 
   $.ajax({
@@ -36,11 +34,8 @@ function getVersion() {
 }
 
 function addShelf(formData) {
-  console.log("addShelf")
   var urll = url_host + "shelfs"
   var status = false
-
-  console.log(JSON.stringify(formData));
 
   $.ajax({
     type: "POST",
@@ -49,7 +44,6 @@ function addShelf(formData) {
     dataType: 'json',
     contentType: "application/json",
     success: function(data) {
-      console.log(data)
 
       $('#availableShelfs').append(
         $('<li>').attr('id', formData['name']).addClass("list-group-item ").html(
@@ -66,7 +60,6 @@ function addShelf(formData) {
 }
 
 function getShelfs() {
-  console.log("getShelfs")
   var urll = url_host + "shelfs"
 
   $.ajax({
@@ -95,8 +88,6 @@ function getShelfs() {
 }
 
 $(document).ready(function() {
-  console.log("Website loaded");
-
   getVersion();
   getSettings();
   getShelfs();

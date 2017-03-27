@@ -10,8 +10,6 @@ function closeModalShelf() {
 }
 
 function addShelfItem() {
-  console.log("addShelfItem");
-
   var name = $('#inputShelfName').val()
   var path = $('#inputShelfDirectory').val()
 

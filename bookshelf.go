@@ -55,7 +55,6 @@ func main() {
 
 	if len(os.Args) < 2 {
 		restInit()
-		// websocketInit()
 		webkitInit()
 
 		Settings.Log().Debugln("Initialization completed!")

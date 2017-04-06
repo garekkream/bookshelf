@@ -13,6 +13,7 @@ import (
 )
 
 type ShelfList struct {
+	Id     string `json:"shelfId"`
 	Name   string `json:"shelfName"`
 	Path   string `json:"shelfPath"`
 	Active bool   `json:"shelfActive"`

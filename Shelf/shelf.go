@@ -102,7 +102,7 @@ func isShelfListEmpty() bool {
 	}
 }
 
-func DelShelf(name string) error {
+func DelShelf(id string) error {
 	conf := Settings.GetConfig()
 
 	if isShelfListEmpty() {
@@ -113,7 +113,7 @@ func DelShelf(name string) error {
 	}
 
 	for i, n := range conf.Shelfs {
-		if n.Name == name {
+		if n.Id == id {
 			// If removing currently active shelf, activate first one
 			if n.Active && len(conf.Shelfs) > 0 {
 				conf.Shelfs[0].Active = true
@@ -130,14 +130,14 @@ func DelShelf(name string) error {
 			conf.Shelfs[i] = conf.Shelfs[len(conf.Shelfs)-1]
 			conf.Shelfs = conf.Shelfs[:len(conf.Shelfs)-1]
 
-			Settings.Log().Debugln("Removed Shelf: " + name)
+			Settings.Log().Debugln("Removed Shelf: " + id)
 			Settings.WriteConfig()
 
 			return nil
 		}
 	}
 
-	errorStr := "Failed to find shelf: " + name
+	errorStr := "Failed to find shelf: " + id
 	Settings.Log().Errorln(errorStr)
 	return fmt.Errorf(errorStr)
 }
@@ -155,6 +155,10 @@ func (shelf *Shelf) GetPath() string {
 	return shelf.ShelfPath
 }
 
+func (shelf *Shelf) GetId() string {
+	return shelf.ShelfId
+}
+
 func (shelf *Shelf) addShelfToConfig() {
 	conf := Settings.GetConfig()
 
@@ -163,7 +167,7 @@ func (shelf *Shelf) addShelfToConfig() {
 		conf.Shelfs[i].Active = false
 	}
 
-	conf.Shelfs = append(conf.Shelfs, Settings.ShelfList{shelf.GetName(), shelf.GetPath(), true})
+	conf.Shelfs = append(conf.Shelfs, Settings.ShelfList{shelf.GetId(), shelf.GetName(), shelf.GetPath(), true})
 
 	Settings.WriteConfig()
 }

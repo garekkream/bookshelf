@@ -6,6 +6,7 @@ import (
 
 	"github.com/garekkream/bookshelf/Settings"
 	"github.com/garekkream/bookshelf/Shelf"
+	"github.com/gorilla/mux"
 )
 
 func GetSettings(w http.ResponseWriter, r *http.Request) {
@@ -18,6 +19,7 @@ func GetSettings(w http.ResponseWriter, r *http.Request) {
 	b, _ := json.Marshal(v)
 
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(200)
 	w.Write(b)
 }
@@ -28,6 +30,7 @@ func GetShelfs(w http.ResponseWriter, r *http.Request) {
 	b, _ := json.Marshal(shelfs)
 
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(200)
 	w.Write(b)
 }
@@ -53,6 +56,15 @@ func AddShelf(w http.ResponseWriter, r *http.Request) {
 	w.Write(b)
 }
 
+func DelShelf(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, _ := vars["id"]
+
+	Shelf.DelShelf(id)
+
+	w.WriteHeader(http.StatusAccepted)
+}
+
 func GetVersion(w http.ResponseWriter, r *http.Request) {
 	type verStruct struct {
 		Version string `json:"version"`
@@ -62,6 +74,7 @@ func GetVersion(w http.ResponseWriter, r *http.Request) {
 	b, _ := json.Marshal(v)
 
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(200)
 	w.Write(b)
 }

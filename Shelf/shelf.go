@@ -16,7 +16,7 @@ import (
 )
 
 type Shelf struct {
-	ShelfId   string      `json:"id"`
+	ShelfID   string      `json:"id"`
 	ShelfName string      `json:"name"`
 	ShelfPath string      `json:"path"`
 	Books     []Book.Book `json:"books"`
@@ -61,7 +61,7 @@ func NewShelf(name string, path string) string {
 		s.ShelfPath = defaultPath + "/" + file
 	}
 
-	s.ShelfId = generateShelfID(name + path)
+	s.ShelfID = generateShelfID(name + path)
 
 	os.Create(s.ShelfPath)
 
@@ -72,7 +72,7 @@ func NewShelf(name string, path string) string {
 
 	Settings.Log().Debugln("New shelf: " + s.ShelfName + " in " + s.ShelfPath)
 
-	return s.ShelfId
+	return s.ShelfID
 }
 
 func (shelf *Shelf) saveShelf() {
@@ -187,7 +187,7 @@ func (shelf *Shelf) GetPath() string {
 }
 
 func (shelf *Shelf) GetId() string {
-	return shelf.ShelfId
+	return shelf.ShelfID
 }
 
 func (shelf *Shelf) addShelfToConfig() {

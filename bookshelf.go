@@ -27,6 +27,7 @@ type shelfsParams struct {
 	del    *parser.CmdClause
 	active *parser.CmdClause
 	name   *string
+	id     *string
 	path   *string
 	index  *int
 }
@@ -60,7 +61,8 @@ func cliParse() {
 	shelf.list = shelf.cmd.Command("list", "List available shelfs")
 	shelf.del = shelf.cmd.Command("del", "Delete existing shelf")
 	shelf.active = shelf.cmd.Command("active", "Activate selected shelf")
-	shelf.name = shelf.cmd.Flag("name", "New shelf name").String()
+	shelf.name = shelf.cmd.Flag("name", "Shelf name").String()
+	shelf.id = shelf.cmd.Flag("name", "Shelf id").String()
 	shelf.path = shelf.cmd.Flag("path", "Storage path for new shelf").String()
 	shelf.index = shelf.cmd.Flag("index", "Access shelfs using index").Int()
 
@@ -125,7 +127,17 @@ func cliParseShelfNewHndl(s *shelfsParams) {
 }
 
 func cliParseShelfDelHndl(s *shelfsParams) {
+	if len(*s.name) > 0 {
+		Shelf.DelShelfByName(*s.name)
+		return
+	}
 
+	if len(*s.id) > 0 {
+		Shelf.DelShelfByName(*s.id)
+		return
+	}
+
+	Settings.Log().Errorln("Failed to remove Shelf. Missing shelf name!")
 }
 
 func main() {
@@ -141,14 +153,6 @@ func main() {
 		Settings.Log().Debugln("Initialization completed!")
 	} else {
 		cliParse()
-		// case "shelf del":
-		// 	if len(*shelfName) != 0 {
-		// 		Shelf.DelShelf(*shelfName)
-		// 	} else {
-		// 		Settings.Log().Errorln("Failed to remove Shelf. Missing Shelf name!")
-		// 	}
-		// 	break
-		//
 		// case "shelf list":
 		// 	shelfs := Settings.GetConfig().Shelfs
 		//

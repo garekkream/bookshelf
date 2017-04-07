@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/garekkream/bookshelf/Settings"
@@ -60,7 +61,11 @@ func DelShelf(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, _ := vars["id"]
 
-	Shelf.DelShelf(id)
+	err := Shelf.DelShelfByID(id)
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+	}
 
 	w.WriteHeader(http.StatusAccepted)
 }

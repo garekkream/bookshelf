@@ -141,7 +141,7 @@ func PrintConfig() {
 	if len(config.Shelfs) != 0 {
 		fmt.Printf("\tShelfs:\n")
 		for _, shelf := range config.Shelfs {
-			fmt.Printf("\t\t%s \t (%s) \t [Active = %t]\n", shelf.Name, shelf.Path, shelf.Active)
+			fmt.Printf("\t\t%s \t %s \t (%s) \t [Active = %t]\n", shelf.Id, shelf.Name, shelf.Path, shelf.Active)
 		}
 	} else {
 		fmt.Printf("\t\tNo shelfs available!\n")

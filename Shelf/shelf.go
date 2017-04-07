@@ -28,7 +28,7 @@ var (
 	currentShelf = new(Shelf)
 )
 
-func generateShelfId(chain string) string {
+func generateShelfID(chain string) string {
 	str := []byte(chain + string(time.Now().Minute()) + string(time.Now().Second()))
 
 	sum := md5.New()
@@ -61,7 +61,7 @@ func NewShelf(name string, path string) string {
 		s.ShelfPath = defaultPath + "/" + file
 	}
 
-	s.ShelfId = generateShelfId(name + path)
+	s.ShelfId = generateShelfID(name + path)
 
 	os.Create(s.ShelfPath)
 
@@ -92,54 +92,85 @@ func ReadShelf(path string) {
 	json.Unmarshal(file, currentShelf)
 }
 
-func isShelfListEmpty() bool {
+func isShelfListEmpty() (bool, error) {
 	conf := Settings.GetConfig()
 
 	if len(conf.Shelfs) > 0 {
-		return false
-	} else {
-		return true
+		return false, nil
+	}
+
+	return true, fmt.Errorf("Shelf list is empty")
+}
+
+func activateFirstShelf(shelf Settings.ShelfList) {
+	conf := Settings.GetConfig()
+
+	if shelf.Active && len(conf.Shelfs) > 0 {
+		conf.Shelfs[0].Active = true
 	}
 }
 
-func DelShelf(id string) error {
+//DelShelfByName removes shelf by name provided by user
+// if success function returns nil, otherwise error messeage
+func DelShelfByName(name string) error {
 	conf := Settings.GetConfig()
 
-	if isShelfListEmpty() {
-		errorStr := "Shelf list is empty!"
+	_, err := isShelfListEmpty()
+	if err != nil {
+		return err
+	}
 
-		Settings.Log().Errorln(errorStr)
-		return fmt.Errorf(errorStr)
+	for i, n := range conf.Shelfs {
+		if n.Name == name {
+			activateFirstShelf(n)
+			return delShelf(n.Path, i)
+		}
+	}
+
+	return fmt.Errorf("Shelf %s not found", name)
+}
+
+//DelShelfByID removes shelf by id provided by user
+// if success function returns nil, otherwise error messeage
+func DelShelfByID(id string) error {
+	conf := Settings.GetConfig()
+
+	_, err := isShelfListEmpty()
+	if err != nil {
+		return err
 	}
 
 	for i, n := range conf.Shelfs {
 		if n.Id == id {
-			// If removing currently active shelf, activate first one
-			if n.Active && len(conf.Shelfs) > 0 {
-				conf.Shelfs[0].Active = true
-			}
-
-			_, err := os.Stat(n.Path)
-			if err != nil {
-				Settings.Log().Warningf("Failed to remove Shelf! File %s doesn't exists! (err: %v)\n", n.Path, err)
-				return err
-			}
-
-			os.Remove(n.Path)
-
-			conf.Shelfs[i] = conf.Shelfs[len(conf.Shelfs)-1]
-			conf.Shelfs = conf.Shelfs[:len(conf.Shelfs)-1]
-
-			Settings.Log().Debugln("Removed Shelf: " + id)
-			Settings.WriteConfig()
-
-			return nil
+			activateFirstShelf(n)
+			return delShelf(n.Path, i)
 		}
 	}
 
-	errorStr := "Failed to find shelf: " + id
-	Settings.Log().Errorln(errorStr)
-	return fmt.Errorf(errorStr)
+	return fmt.Errorf("Shelf %s not found", id)
+}
+
+func delShelf(path string, index int) error {
+	conf := Settings.GetConfig()
+
+	_, err := os.Stat(path)
+	if err != nil {
+		Settings.Log().Warningf("Failed to remove Shelf! File %s doesn't exists! (err: %v)\n", path, err)
+		return err
+	}
+
+	err = os.Remove(path)
+	if err != nil {
+		return err
+	}
+
+	conf.Shelfs[index] = conf.Shelfs[len(conf.Shelfs)-1]
+	conf.Shelfs = conf.Shelfs[:len(conf.Shelfs)-1]
+
+	Settings.Log().Debugln("Removed Shelf: " + path)
+	Settings.WriteConfig()
+
+	return nil
 }
 
 func (shelf *Shelf) Name(name string) {

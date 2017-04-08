@@ -268,3 +268,36 @@ func ListBooks() {
 		fmt.Printf("\t%d \t%s \t%s\n", book.GetId(), book.GetTitle(), book.GetAuthor())
 	}
 }
+
+//ListShelfs will print out all shelfs into console
+func ListShelfs() error {
+	_, err := isShelfListEmpty()
+	if err != nil {
+		Settings.Log().Errorln(err)
+		return err
+	}
+	for _, n := range Settings.GetConfig().Shelfs {
+		fmt.Printf("%s \t%s \t%s ", n.Id, n.Name, n.Path)
+		if n.Active {
+			fmt.Print("(Active)")
+		}
+		fmt.Print("\n")
+	}
+
+	return nil
+}
+
+func ActivateShelf(id string) {
+	shelfs := Settings.GetConfig().Shelfs
+
+	for i, n := range shelfs {
+		if n.Id == id {
+			shelfs[i].Active = true
+			ReadShelf(shelfs[i].Path)
+		} else {
+			shelfs[i].Active = false
+		}
+	}
+
+	Settings.WriteConfig()
+}

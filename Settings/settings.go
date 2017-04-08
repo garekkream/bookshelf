@@ -152,14 +152,6 @@ func GetConfig() *Config {
 	return config
 }
 
-func ActivateShelf(index int) {
-	for i := range config.Shelfs {
-		config.Shelfs[i].Active = false
-	}
-
-	config.Shelfs[index].Active = true
-}
-
 func CloseLogFile() {
 	logFile.Close()
 }

@@ -1,5 +1,31 @@
 var url_host = "http://localhost:1234/"
 
+function showAlert(message, type, closeDelay) {
+  if ($("#alerts-container").length == 0) {
+    // alerts-container does not exist, create it
+    $("body")
+    .append( $('<div id="alerts-container" style="position: fixed; width: 50%; left: 25%; top: 10%;">') );
+  }
+
+  // default to alert-info; other options include success, warning, danger
+  type = type || "info";
+
+  // create the alert div
+  var alert = $('<div class="alert alert-' + type + ' fade in">')
+    .append(
+      $('<button type="button" class="close" data-dismiss="alert">')
+        .append("&times;")
+    ).append(message);
+
+  // add the alert div to top of alerts-container, use append() to add to bottom
+  $("#alerts-container").prepend(alert);
+
+  // if closeDelay was passed - set a timeout to close the alert
+  if (closeDelay) {
+    window.setTimeout(function() { alert.alert("close") }, closeDelay);
+  }
+}
+
 function getSettings() {
   var urll = url_host + "settings"
 
@@ -70,7 +96,7 @@ function removeShelf(data) {
       document.getElementById(String(id)).remove()
     },
     error: function(xhdr, data, err) {
-      alert(err);
+      showAlert(xhdr.responseText, "danger", 1000);
     }
   })
 }

@@ -16,7 +16,12 @@ func GetSettings(w http.ResponseWriter, r *http.Request) {
 	}
 
 	v := config{ConfigPath: Settings.GetConfigDir(), DebugMode: Settings.GetDebugMode()}
-	b, _ := json.Marshal(v)
+	b, err := json.Marshal(v)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusForbidden)
+
+		return
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -27,7 +32,12 @@ func GetSettings(w http.ResponseWriter, r *http.Request) {
 func GetShelfs(w http.ResponseWriter, r *http.Request) {
 	shelfs := Settings.GetConfig().Shelfs
 
-	b, _ := json.Marshal(shelfs)
+	b, err := json.Marshal(shelfs)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusForbidden)
+
+		return
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -42,14 +52,19 @@ func AddShelf(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var id struct {
-		id string `json:"id"`
+		ID string `json:"id"`
 	}
 
 	json.NewDecoder(r.Body).Decode(&body)
 
-	id.id = Shelf.NewShelf(body.Name, body.Path)
+	id.ID = Shelf.NewShelf(body.Name, body.Path)
 
-	b, _ := json.Marshal(id)
+	b, err := json.Marshal(id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusForbidden)
+
+		return
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(201)
@@ -76,7 +91,12 @@ func GetVersion(w http.ResponseWriter, r *http.Request) {
 	}
 
 	v := verStruct{Version: date + ver}
-	b, _ := json.Marshal(v)
+	b, err := json.Marshal(v)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusForbidden)
+
+		return
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")

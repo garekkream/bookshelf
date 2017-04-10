@@ -37,7 +37,7 @@ func generateShelfID(chain string) string {
 	return hex.EncodeToString(sum.Sum(nil)[:5])
 }
 
-func NewShelf(name string, path string) string {
+func NewShelf(name string, path string) (string, error) {
 	s := new(Shelf)
 
 	if len(name) != 0 {
@@ -63,7 +63,11 @@ func NewShelf(name string, path string) string {
 
 	s.ShelfID = generateShelfID(name + path)
 
-	os.Create(s.ShelfPath)
+	_, err := os.Create(s.ShelfPath)
+	if err != nil {
+		Settings.Log().Errorln(err)
+		return "", err
+	}
 
 	s.saveShelf()
 	s.addShelfToConfig()
@@ -72,7 +76,7 @@ func NewShelf(name string, path string) string {
 
 	Settings.Log().Debugln("New shelf: " + s.ShelfName + " in " + s.ShelfPath)
 
-	return s.ShelfID
+	return s.ShelfID, nil
 }
 
 func (shelf *Shelf) saveShelf() {

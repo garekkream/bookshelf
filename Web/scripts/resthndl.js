@@ -1,4 +1,5 @@
 var url_host = "http://localhost:1234/"
+var alert_delay = 2500
 
 function showAlert(message, type, closeDelay) {
   if ($("#alerts-container").length == 0) {
@@ -37,7 +38,7 @@ function getSettings() {
       document.getElementById("inputShelfDirectory").value = configDir
     },
     error: function(xhdr, data, err) {
-      console.log(err);
+      showAlert(xhdr.responseText, "danger", alert_delay);
     }
   })
 }
@@ -54,7 +55,7 @@ function getVersion() {
       $("#version").text(version);
     },
     error : function(xhdr, data, err) {
-      console.log(err);
+      showAlert(xhdr.responseText, "danger", alert_delay);
     }
   })
 }
@@ -79,7 +80,7 @@ function addShelf(formData) {
       document.getElementById("inputShelfName").value = "";
     },
     error: function(xhdr, data, err) {
-      alert(err)
+      showAlert(xhdr.responseText, "danger", alert_delay);
     }
   })
 }
@@ -96,7 +97,7 @@ function removeShelf(data) {
       document.getElementById(String(id)).remove()
     },
     error: function(xhdr, data, err) {
-      showAlert(xhdr.responseText, "danger", 1000);
+      showAlert(xhdr.responseText, "danger", alert_delay);
     }
   })
 }
@@ -125,7 +126,7 @@ function getShelfs() {
       });
     },
     error : function(xhdr, data, err) {
-      console.log(err)
+      showAlert(xhdr.responseText, "danger", alert_delay);
     }
   })
 }

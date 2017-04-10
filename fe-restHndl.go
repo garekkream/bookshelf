@@ -46,6 +46,8 @@ func GetShelfs(w http.ResponseWriter, r *http.Request) {
 }
 
 func AddShelf(w http.ResponseWriter, r *http.Request) {
+	var err error
+
 	var body struct {
 		Name string
 		Path string
@@ -57,7 +59,7 @@ func AddShelf(w http.ResponseWriter, r *http.Request) {
 
 	json.NewDecoder(r.Body).Decode(&body)
 
-	id.ID = Shelf.NewShelf(body.Name, body.Path)
+	id.ID, err = Shelf.NewShelf(body.Name, body.Path)
 
 	b, err := json.Marshal(id)
 	if err != nil {

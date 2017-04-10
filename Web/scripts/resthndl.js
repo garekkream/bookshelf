@@ -27,6 +27,11 @@ function showAlert(message, type, closeDelay) {
   }
 }
 
+function refreshShelfs() {
+  $('#availableShelfs').empty()
+  getShelfs()
+}
+
 function getSettings() {
   var urll = url_host + "settings"
 
@@ -71,10 +76,7 @@ function addShelf(formData) {
     dataType: 'json',
     contentType: "application/json",
     success: function(data) {
-      $('#availableShelfs').append(
-        $('<li>').attr('id', data['id']).addClass("list-group-item ").html(
-        formData['name'] + "&emsp; <a><i class='fa fa-upload'></i></a> \
-        &emsp; <a data-id='"+ formData['id'] +"' onclick='removeShelf(this)'><i class='fa fa-times-rectangle'></i></a></div>"))
+      refreshShelfs();
 
       document.getElementById("inputShelfDirectory").value = configDir + "/";
       document.getElementById("inputShelfName").value = "";
@@ -94,7 +96,7 @@ function removeShelf(data) {
     url: urll,
     data: String(id),
     success: function(data) {
-      document.getElementById(String(id)).remove()
+      refreshShelfs();
     },
     error: function(xhdr, data, err) {
       showAlert(xhdr.responseText, "danger", alert_delay);
@@ -109,21 +111,27 @@ function getShelfs() {
     type: "GET",
     url : urll,
     success : function(data) {
-      jQuery.each(data, function(index) {
-        var id = data[index]['shelfId']
-        var name = data[index]['shelfName']
-        var active = data[index]['shelfActive']
-        var activeShelf = " "
+      if (data.length > 0) {
+        $('#shelfsHeader').addClass('text-success').text("Available Shelfs");
 
-        if(active === true) {
-          activeShelf = "&emsp; <i class='fa fa-check'></i>"
-        }
+        jQuery.each(data, function(index) {
+          var id = data[index]['shelfId']
+          var name = data[index]['shelfName']
+          var active = data[index]['shelfActive']
+          var activeShelf = " "
 
-        $('#availableShelfs').append(
-          $('<li>').attr('id', id).addClass("list-group-item").html(
-            name + "&emsp; <a><i class='fa fa-upload'></i></a> \
-            &emsp; <a data-id='"+ id +"' onclick='removeShelf(this)'><i class='fa fa-times-rectangle'></i></a>" + activeShelf +"</div>"));
-      });
+          if(active === true) {
+            activeShelf = "&emsp; <i class='fa fa-check'></i>"
+          }
+
+          $('#availableShelfs').append(
+            $('<li>').attr('id', id).addClass("list-group-item").html(
+              name + "&emsp; <a><i class='fa fa-upload'></i></a> \
+              &emsp; <a data-id='"+ id +"' onclick='removeShelf(this)'><i class='fa fa-times-rectangle'></i></a>" + activeShelf +"</div>"));
+        });
+      } else {
+        $('#shelfsHeader').addClass('text-danger').text("No shelfs available!")
+      }
     },
     error : function(xhdr, data, err) {
       showAlert(xhdr.responseText, "danger", alert_delay);

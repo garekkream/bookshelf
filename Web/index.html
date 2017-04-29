@@ -3,6 +3,7 @@
 <link rel="stylesheet" type="text/css" href="resources/font-awesome/css/font-awesome.css">
 
 <script src="scripts/jquery-3.1.1.js"></script>
+<script src="scripts/settingsbar.js"></script>
 <script src="scripts/scripts.js"></script>
 <script src="scripts/resthndl.js"></script>
 <script src="resources/bootstrap/js/bootstrap.js"></script>
@@ -79,35 +80,35 @@
     </div>
   </div>
 
-  <!-- <div class="container">
-    <div class="row">
-  		<div id="leftSLideBar" class="hidden-xs hidden-sm">
-      <div class="panel panel-default">
-          <div class="panel-leftheading">
-              <h3 class="panel-lefttitle">123</h3>
+  <nav>
+    <a href="" id="menuToggle">
+      <span class="navClosed"></span>
+    </a>
+    <div class="section">
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-8">
+            <h1 class="text-center">Settings</h1><br />
           </div>
-          <div class="panel-rightbody">
-              <div>
-
-              </div>
-          </div>
-          <div class="clearfix">
-          </div>
+        </div>
       </div>
     </div>
-
-    <div id="rightSLideBar" class="hidden-xs hidden-sm">
-      <div class="panel panel-default">
-          <div class="panel-leftheading">
-              <h3 class="panel-lefttitle"><i class="fa fa-mobile"></i> 1111</h3>
+    <div class="section">
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-2">Debug mode:</div>
+          <div class="col-xs-10">
+            <a class="btn btn-primary" id="debugMode" onclick="setDebug()">Enable</a>
           </div>
-          <div class="panel-rightbody">
-
+        </div>
+        <div class="row">
+          <div class="col-xs-2">Logs:</div>
+          <div class="col-xs-10">
+            <label id="logPath"></label>
           </div>
-          <div class="clearfix">
-          </div>
+        </div>
       </div>
     </div>
-  </div> -->
+  </nav>
 
 </body>

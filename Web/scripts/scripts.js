@@ -25,3 +25,16 @@ function addShelfItem() {
     $("#newShelf").modal("hide");
   }
 }
+
+function setDebug() {
+  var val = $('#debugMode').text()
+  var obj = new Object()
+
+  if (val == "Enable") {
+    obj.debugMode = "true";
+  } else {
+    obj.debugMode = "false";
+  }
+
+  setDebugMode(obj)
+}

@@ -133,6 +133,10 @@ func GetConfigDir() string {
 	return path.Dir(config.ConfigPath)
 }
 
+func GetLogPath() string {
+	return config.LogPath
+}
+
 func PrintConfig() {
 	fmt.Println("Bookshelf Settings:")
 	fmt.Printf("\tConfig path: \t%s\n", config.ConfigPath)

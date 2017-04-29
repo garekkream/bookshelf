@@ -41,6 +41,35 @@ function getSettings() {
     success: function(data) {
       configDir = data['configPath'];
       document.getElementById("inputShelfDirectory").value = configDir
+
+      $('#logPath').text(data['logPath'])
+      if(data['debugMode'] == true) {
+        $("#debugMode").text("Disable");
+      } else {
+        $('#debugMode').text("Enable");
+      }
+    },
+    error: function(xhdr, data, err) {
+      showAlert(xhdr.responseText, "danger", alert_delay);
+    }
+  })
+}
+
+function setDebugMode(mode) {
+  var urll = url_host + "settings"
+
+  $.ajax({
+    type: "POST",
+    url: urll,
+    data: JSON.stringify(mode),
+    dataType: 'json',
+    contentType: "application/json",
+    success: function(data) {
+      if (data['debugMode'] == "true") {
+        $('#debugMode').text("Disable")
+      } else {
+        $('#debugMode').text("Enable")
+      }
     },
     error: function(xhdr, data, err) {
       showAlert(xhdr.responseText, "danger", alert_delay);
@@ -67,7 +96,6 @@ function getVersion() {
 
 function addShelf(formData) {
   var urll = url_host + "shelfs"
-  var status = false
 
   $.ajax({
     type: "POST",
